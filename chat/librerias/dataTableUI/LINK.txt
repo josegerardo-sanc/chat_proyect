@@ -1,0 +1,16 @@
+https://datatables.net/extensions/responsive/examples/styling/jqueryui.html
+
+
+https://code.jquery.com/jquery-3.3.1.js
+https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js
+https://cdn.datatables.net/1.10.20/js/dataTables.jqueryui.min.js
+https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js
+https://cdn.datatables.net/responsive/2.2.3/js/responsive.jqueryui.min.js
+
+
+https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css
+https://cdn.datatables.net/1.10.20/css/dataTables.jqueryui.min.css
+https://cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css
+
+<table id="example" class="display responsive nowrap" style="width:100%">
+        

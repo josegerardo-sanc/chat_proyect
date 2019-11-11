@@ -1,0 +1,158 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+footer {
+    align-self: flex-end;
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    background-color: #5f6769;
+    color: #f2f6f5;
+    font-size: 12px;
+    z-index: 1000;
+
+}
+
+
+/*contenedir main*/
+
+
+.conte_scroll {
+    width: auto;
+    overflow: hidden;
+    overflow-x: scroll;
+}
+
+.conte_menu {
+    display: block;
+    width: calc(100% - 70px);
+    height: 34px;
+    background-color: #3c4245;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    z-index: 1000;
+
+}
+
+.right {
+    margin-left: auto;
+}
+
+.conte_menu a {
+    display: block;
+    padding: 20px 15px;
+    font-size: 15px;
+    color: #f2f6f5;
+}
+
+.conte_menu a:hover {
+    color: #f2f4f6;
+}
+
+.opcion_rigth {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.img_perfil {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+#config_footer {
+    /*background-color: red;*/
+    padding: 9px;
+
+}
+
+/*estilos del menu perfil*/
+
+ul {
+    list-style: none;
+}
+
+.configuraciones_perfil.conf_show {
+    right: 0px;
+    transition: .7s ease;
+
+}
+
+ul.configuraciones_perfil {
+    position: fixed;
+    right: -10000px;
+    top: 50px;
+    transition: .7s ease;
+    z-index: 400000;
+    width: 200px;
+    border: 1px solid #ccc;
+}
+
+ul.configuraciones_perfil li {
+    padding: 5px 0px;
+    font-size: 10px;
+    background-color: white;
+    color: white;
+}
+
+ul.configuraciones_perfil li:nth-child(n+2):hover {
+    background-color: darkcyan;
+}
+
+ul.configuraciones_perfil li:nth-child(n+2):hover p {
+    color: white;
+}
+
+ul.configuraciones_perfil li p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: darkcyan;
+    margin: 10px 10px 10px 10px;
+}
+
+.configuraciones_perfil img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+@media (min-width:425px) {
+
+    .conte_menu {
+        width: calc(100% - 160px);
+    }
+}
+
+
+@media (min-width:768px) {
+
+    .conte_menu {
+        width: calc(100% - 250px);
+        height: 50px;
+        font-size: 14px;
+    }
+}

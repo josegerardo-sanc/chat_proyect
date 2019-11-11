@@ -1,0 +1,166 @@
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        #cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            display: none;
+        }
+
+        #cabecera li {
+            display: block;
+            padding: 10px;
+            color: white;
+            width: 16%;
+            background-color: white;
+            color: #3c4245;
+            text-align: center;
+
+        }
+
+        ul {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+       .contenido a {
+            text-decoration: none;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #dedede;
+            padding: 2px;
+            object-fit: cover;
+        }
+
+        .contenido {
+            padding-bottom:10px;
+            width: 300px;
+            border-bottom:1px solid #dedede;
+
+        }
+
+        @media screen and (min-width:300px) {
+            .contenido {
+                margin: auto;
+                width: 100%;
+                position: relative;
+
+            }
+        }
+
+        .left_ {
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            width: 25%;
+            height: 100px;
+
+        }
+
+
+        .rigth_ {
+            width: 70%;
+            margin-top: 0px;
+            margin-left: auto;
+            padding: 5px 0px;
+            display: flex;
+            align-items: center;
+
+            flex-wrap: wrap;
+        }
+
+        a {
+            color: lightslategrey;
+        }
+
+        .total_width {
+            width: 100%;
+            padding: 8px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        ._input {
+            width: 50%;
+        }
+
+        ._select {
+            width: 50%;
+        }
+
+        .uno {
+            width: 100px;
+        }
+
+        @media screen and (min-width:625px) {
+            #cabecera {
+                display: flex;
+            }
+
+            img {
+                width: 90px;
+                height: 60px;
+            }
+
+            .uno {
+                display: none;
+            }
+
+            .contenido {
+                margin: 10px auto;
+                display: flex;
+                justify-content: flex-end;
+
+            }
+
+            .rigth_,
+            .left_ {
+                width:16%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: left;
+
+            }
+
+            .total_width {
+                width: auto;
+
+            }
+
+            .conte_btn {
+                display: flex;
+                width: 100%;
+                padding-right: 5px;
+            }
+
+            ._input {
+                width: 60px;
+            }
+
+            ._select {
+                width: 90px;
+            }
+
+            .uno {}
+
+            .left_ {
+                position: inherit;
+            }
+
+            .dos {}
+
+
+        }

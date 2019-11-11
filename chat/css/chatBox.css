@@ -1,0 +1,268 @@
+body {}
+
+/*
+.footer-chat {
+    position: fixed;
+    bottom: 0px;
+
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}*/
+
+
+#footer-chat {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    width: 80%;
+    height: calc(100% - 34px);
+}
+
+.chatBox {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    z-index: 2000;
+}
+
+
+/*
+.chatBox {
+    width: calc(100% - 70px);
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    z-index: 10;
+    margin-right: 2px;
+    padding: 2px;
+}*/
+
+.chat_header {
+    padding: 10px 0px;
+    border-bottom: 1px solid #ccc;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    position: relative;
+}
+
+.chat_name {
+    width: 80%;
+    font-size: 15px;
+    padding: 0px 10px;
+    text-align: center;
+}
+
+.chat_is_type {
+    position: absolute;
+    top: 60%;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.new_chat_msj,
+.cerrar_chat,
+.conexion_status {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ccc;
+    background-color: transparent;
+}
+
+.new_chat_msj {
+    right: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: white;
+    padding: 3px 10px;
+    background-color: #b22222;
+}
+
+.conexion_status {
+    right: 20px;
+}
+
+.cerrar_chat {
+    right: 0px;
+    z-index: 100;
+    padding: 10px;
+}
+
+
+
+.cerrar_chat:hover {
+    text-decoration: none;
+    color: rgba(31, 31, 31, 0.7);
+}
+
+.chat_body {
+
+    height: 100%;
+    margin-top: 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 0px 10px;
+}
+
+
+.chat_body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chat_body::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #ccc;
+
+}
+
+
+.chat {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+}
+
+.chat .user-photo {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat .chat-message {
+    margin: 0px;
+    padding: 5px;
+    width: 85%;
+    border-radius: 10px;
+    height: auto;
+    background-color: dodgerblue;
+}
+
+.chat .friend {
+    background-color: #1adda4;
+    order: -1;
+}
+
+.chat .self {
+    background: #11998e;
+}
+
+.chat-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0px 5px 5px;
+    background-color: white;
+}
+
+.ultima_conexion_chat {
+    display: block;
+    text-align: center;
+    width: 100%;
+    color: #ccc;
+}
+
+.btn_foot_chat {
+    padding: 12px 10px;
+    align-self: flex-end;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    background-color: white;
+}
+
+.btn_foot_chat.btn_send {
+    color: dodgerblue;
+}
+
+.btn_foot_chat.btn_file_upload {
+    color: #5F6A6A;
+}
+
+
+.chat-foot .message_send {
+    border-radius: 7px;
+    width: 90%;
+}
+
+
+@media (min-width: 425px) {
+
+    #footer-chat {
+        position: fixed;
+        bottom: 0px;
+        width: auto;
+        height: auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .chatBox {
+        width: 250px;
+        height: 350px;
+        border: 1px solid #ccc;
+    }
+
+    .chat_header {
+        font-size: 12px;
+    }
+
+    .chat .chat-message {
+        padding: 5px;
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 768px) {
+    .chat_header {
+        font-size: 15px;
+    }
+
+    .chat .chat-message {
+        padding: 14px;
+        font-size: 12px;
+    }
+
+    .chatBox {
+        width: 300px;
+        height: 400px;
+        border: 1px solid #ccc;
+    }
+
+}
+
+.estilo_prueba {
+    padding: 8px;
+}
+
+.fecha {
+    padding: 0px 20px;
+    margin-top: 0px;
+    font-size: 10px;
+    display: flex;
+}
+
+.fecha-self {
+    justify-content: flex-end;
+}
+
+.fecha-friend {
+    justify-content: flex-start;
+}
