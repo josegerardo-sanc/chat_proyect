@@ -5,6 +5,9 @@ date_default_timezone_set("America/Mexico_City");
 $dns = "mysql:dbname=chat;host=localhost;charset=utf8mb4";
 $usuario = "root";
 $pass = "";
+$conexion="";
+
+
 try {
     $conexion = new PDO($dns, $usuario, $pass);
     //echo 'Conectado a '.$conexion->getAttribute(PDO::ATTR_CONNECTION_STATUS);
@@ -14,7 +17,16 @@ try {
     exit();
 }
 
+function data_user_personal($usuario_id,$conexion){
+  
+	$data_user=$conexion->prepare("SELECT * FROM datospersonales WHERE id_datos_personal='$usuario_id' ");
+	$data_user->execute();
+	$dato=$data_user->fetch(PDO::FETCH_ASSOC);
 
+	$nombre_completo=ucwords($dato['nombre'].' '.$dato['ap_paterno']);
+    return $nombre_completo;
+
+}
 
 function fetch_is_type_status($user_id, $connect)
 {
@@ -62,9 +74,9 @@ function Mensaje_Contador_NoVisto($from_user_id, $to_user_id, $connect)
 {
 	$query = "
 	SELECT * FROM chat_message 
-	WHERE from_user_id = '$from_user_id' 
-	AND to_user_id = '$to_user_id' 
-	AND status = '1'";
+	WHERE (from_user_id = '$from_user_id' 
+	AND to_user_id = '$to_user_id') 
+	AND (status = '0' AND type_conversacion='0')";
 	$statement = $connect->prepare($query);
 	$statement->execute();
 	$count = $statement->rowCount();
@@ -76,23 +88,74 @@ function Mensaje_Contador_NoVisto($from_user_id, $to_user_id, $connect)
 	return $output;
 }
 
-function chat_history($from_user_id, $to_user_id, $conexion)
+function Mensaje_Contador_NoVisto_grupo($from_user,$to_user_id, $connect)
 {
-	
-    $stament_historial=$conexion->prepare('SELECT * FROM chat_message WHERE (from_user_id=? AND to_user_id=?) OR (to_user_id=? AND from_user_id=?)');
+	$query = "
+	SELECT * FROM chat_message 
+	WHERE (to_user_id = '$to_user_id' AND from_user_id!='$from_user') 
+	AND type_conversacion='1'";
+	$statement = $connect->prepare($query);
+	$statement->execute();
+	$count = $statement->rowCount();
+	$output =0;
+    
+	if($count>0){
+        $output=$count;
+    }
+	return $output;
+}
+
+function Mensaje_participantes_grupo($id_grupo,$id_user,$connect)
+{  
+	$query = "SELECT * FROM `participantes` WHERE id_grupo='$id_grupo' AND id_user='$id_user'";
+	$statement = $connect->prepare($query);
+	$statement->execute();
+	$output=0;
+    
+	$result = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    if($result['count_msj']>0){
+      $output=$result['count_msj'];
+    }
+	return $output;
+}
+
+function chat_history($type_usuario,$from_user_id, $to_user_id, $conexion)
+{
+    //status
+    //0 nuevo
+    //1 visto
+    //2 salio del grupo // 2 lo sacaron del grupo
+    
+	if($type_usuario==1){
+    
+    $query = "SELECT * FROM `chat_message` WHERE to_user_id='$to_user_id' AND type_conversacion='1' AND status!='2'";
+	$stament_historial = $conexion->prepare($query);
+	$stament_historial->execute();
+    
+    }
+    else{
+    $stament_historial=$conexion->prepare('SELECT * FROM chat_message WHERE (type_conversacion=0 AND status!=2) AND (from_user_id=? AND to_user_id=?) OR (to_user_id=? AND from_user_id=?)');
     $stament_historial->bindParam(1,$from_user_id,PDO::PARAM_INT);
     $stament_historial->bindParam(2,$to_user_id,PDO::PARAM_INT);
     $stament_historial->bindParam(3,$from_user_id,PDO::PARAM_INT);
     $stament_historial->bindParam(4,$to_user_id,PDO::PARAM_INT);
-    
     $stament_historial->execute();
+    }
+    
     $historia_html='';
     
     while($result=$stament_historial->fetch(PDO::FETCH_ASSOC)){
+        
+        $D=$result['from_user_id'];
+         $query=$conexion->prepare("SELECT * FROM `login` WHERE id='$D'");
+         $query->execute();
+         $id_data_personal=$query->fetch(PDO::FETCH_ASSOC);
        
         if($from_user_id==$result['from_user_id'])
         {
             $historia_html.='<div class="estilo_prueba">
+            <small style="display:block; width:100%; color:#277548;">'.data_user_personal($id_data_personal['id_datos_personal'],$conexion).'</small>
             <div class="chat">
             <img src="https://picsum.photos/200/200" class="user-photo" alt="">
             <p class="small self chat-message">'.$result['chat_message'].'</p>
@@ -103,11 +166,12 @@ function chat_history($from_user_id, $to_user_id, $conexion)
         }
         else{
             $historia_html.='<div class="estilo_prueba">
+            <small style="display:block; width:100%; color:red;">'.data_user_personal($id_data_personal['id_datos_personal'],$conexion).'</small>
             <div class="chat">
             <img src="https://picsum.photos/200/200" class="user-photo" alt="">
             <p class="small friend chat-message">'.$result['chat_message'].'</p>
             </div>
-            <span class="fecha fecha-friend">'.$result['timestamp'].'</span>
+            <p class="fecha fecha-friend">'.$result['timestamp'].'</p>
             </div>';
         }
     }
@@ -115,9 +179,15 @@ function chat_history($from_user_id, $to_user_id, $conexion)
 }
 
 function MensajesVisto($from_user_id, $to_user_id, $conexion){
-    $mensajes=$conexion->prepare("UPDATE chat_message SET status='0' WHERE ((to_user_id=? AND from_user_id=?) AND status='1')");
+    $mensajes=$conexion->prepare("UPDATE chat_message SET status='1' WHERE ((to_user_id=? AND from_user_id=?) AND status='0')");
     $mensajes->bindParam(1,$from_user_id,PDO::PARAM_INT);
     $mensajes->bindParam(2,$to_user_id,PDO::PARAM_INT);
+    $mensajes->execute();
+    
+}
+function MensajesVisto_grupo($numero_msj,$from_user,$id_grupo,$conexion){
+    //status a 1 significa que el grupo pasa hacer visto!!!
+    $mensajes=$conexion->prepare("UPDATE `participantes` SET `status`='1',`count_msj`='$numero_msj' WHERE (id_user='$from_user' AND id_grupo='$id_grupo') AND status!='2'");
     $mensajes->execute();
     
 }
@@ -136,68 +206,17 @@ function is_type($from_user_id,$to_user_id,$conexion){
     return $Is_Type;
 }
 
-function fetch_group_chat_history($connect)
-{
-	$query = "
-	SELECT * FROM chat_message 
-	WHERE to_user_id = '0'  
-	ORDER BY timestamp DESC
-	";
+function is_type_update($id_user,$conexion){
+    
+    $query=$conexion->prepare("UPDATE is_writing SET is_type='no' WHERE from_user_id='$id_user'");
+    $query->execute();
+}
 
-	$statement = $connect->prepare($query);
 
-	$statement->execute();
-
-	$result = $statement->fetchAll();
-
-	$output = '<ul class="list-unstyled">';
-	foreach($result as $row)
-	{
-		$user_name = '';
-		$dynamic_background = '';
-		$chat_message = '';
-		if($row["from_user_id"] == $_SESSION["user_id"])
-		{
-			if($row["status"] == '2')
-			{
-				$chat_message = '<em>This message has been removed</em>';
-				$user_name = '<b class="text-success">You</b>';
-			}
-			else
-			{
-				$chat_message = $row["chat_message"];
-				$user_name = '<button type="button" class="btn btn-danger btn-xs remove_chat" id="'.$row['chat_message_id'].'">x</button>&nbsp;<b class="text-success">You</b>';
-			}
-			
-			$dynamic_background = 'background-color:#ffe6e6;';
-		}
-		else
-		{
-			if($row["status"] == '2')
-			{
-				$chat_message = '<em>This message has been removed</em>';
-			}
-			else
-			{
-				$chat_message = $row["chat_message"];
-			}
-			$user_name = '<b class="text-danger">'.get_user_name($row['from_user_id'], $connect).'</b>';
-			$dynamic_background = 'background-color:#ffffe6;';
-		}
-
-		$output .= '
-
-		<li style="border-bottom:1px dotted #ccc;padding-top:8px; padding-left:8px; padding-right:8px;'.$dynamic_background.'">
-			<p>'.$user_name.' - '.$chat_message.' 
-				<div align="right">
-					- <small><em>'.$row['timestamp'].'</em></small>
-				</div>
-			</p>
-		</li>
-		';
-	}
-	$output .= '</ul>';
-	return $output;
+function chat_history_grupo(){
+    
+    
+    
 }
 
 

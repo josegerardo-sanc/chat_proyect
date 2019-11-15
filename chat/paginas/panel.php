@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="../css/Menu.css">
     <link rel="stylesheet" href="../css/chatBox.css">
     <script src="../librerias/js/all.js"></script>
-    <link rel="stylesheet" href="../css/chatGroup.css">
+
+    <link rel="stylesheet" href="../css/chatBoxGrupo.css">
+
 
 
 </head>
@@ -24,7 +26,10 @@
 
     <?php
         include('header.php');
+    /*si el usuario presiona f5 se reinicia mi variable grupo para que vuelva afuncionar la opcio agregar y NoAgregar*/
+         unset($_SESSION['grupo']);
     ?>
+
 
     <nav class="conte_users">
         <div class="info_users">
@@ -71,47 +76,71 @@
     </nav>
     <div class="cont_main">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
+            <div class="row d-flex justify-content-end">
+                <div class="col-sm-10">
 
-                    <h1 class="display-4" style="width: 100%; margin-left:auto; text-align: right;">chat</h1>
-                    <button type="button" id="alert">alert</button>
+                    <!-- Button trigger modal -->
+                    <?php
+                    if($_SESSION['type_user_logueo']!=3)
+                    {?>
 
-                    <script>
-                        window.onload = function() {
-                            document.getElementById('alert').addEventListener('click', function() {
-                                alert("olisss");
-                            });
-                        }
-                    </script>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" id="grupo_chat">
+                        Crear Grupo
+                    </button>
 
-                    <!--   <div class="d-flex justify-content-end">
-                        <input type="hidden" id="is_active_group_chat_window" value="no" />
-                        <button class="btn btn-sm  btn-info" id="group_chat">Iniciar Chat Grupal</button>
-                    </div> -->
+                    <div class="modal fade" id="modal_grupo_chat" tabindex="-1" role="dialog" aria-labelledby="grupo_chat" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="" class="col-form-label">Nombre del grupo</label>
+                                        <input type="text" class="form-control" id="name_grupo">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input id="buscar_user" type="search" class="form-control" placeholder="Buscar usuario">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                        </div>
+                                    </div>
 
-                    <!--  <form class="chat-grupo">
-                        <div class="p-2 text-center">
-                            <a class="lead" href="#">Conversacion grupal</a>
-                            <span cerrar>X</span>
-                            <hr>
-                        </div>
-                        <ul class="historial_chat" id="group_chat_history">
-                    
-                        </ul>
-                        <div class="p-4">
-                            <textarea class="form-control" id="group_chat_message" name="chat_message">
-                            </textarea>
-                            <div class="mt-2">
-                                <button class="btn btn-primary" id="send_group_chat">enviar</button>
+                                    <ul class="body_grupo_chat" id="body_grupo_chat">
+                                        <!--  <li class="usuario_grupo" data-nombre="gerardo" data-id="10">
+                                            <div>
+                                                <button class="btn_Agregar btn btn-info"><i class="fas fa-plus"></i></button>
+                                                <button class="btn_Noagregar btn btn-danger ocultar_opc"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                            <a href="#" class="name_grupo">Jose gerardo </a>
+                                            <img src="../imagenes/img2.jpg" alt="">
+                                        </li>
+                                        <li class="usuario_grupo" data-nombre="miguel" data-id="1">
+                                            <div>
+                                                <button class="btn_Agregar btn btn-info"><i class="fas fa-plus"></i></button>
+                                                <button class="btn_Noagregar btn btn-danger ocultar_opc"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                            <a href="#" class="name_grupo">Miguel angel </a>
+                                            <img src="../imagenes/img2.jpg" alt="">
+                                        </li> -->
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-success" id="crear_grupo">Crear Grupo</button>
+                                </div>
                             </div>
                         </div>
-                    
-                    
-                    
-                    </form> -->
-
-
+                    </div>
+                    <?php
+                      }
+                    ?>
+                    <!-- Modal -->
+                    <!--        
+                    fin del modal -->
 
                 </div>
             </div>
@@ -121,7 +150,7 @@
 
     <div class="footer-chat" id="footer-chat">
 
-        <!-- <div class="chatBox" data-id="'+ start_chat_Clave + '">
+        <!--         <div class="chatBox" data-id="'+ start_chat_Clave + '">
             <div class="chat_header">
                 <a href="#" class="chat_name">1_jose</a>
                 <span class="conexion_status fas fa-circle Activo" style="margin: 0px 10px;"></span>
@@ -141,15 +170,16 @@
                 <textarea id="message_send' + start_chat_Clave + '" class="message_send"></textarea>
                 <button type="button" class="btn_foot_chat btn_send"><i class="fas fa-paper-plane"></i></button>
             </div>
-        </div> -->
-
+        </div>
+         -->
     </div>
 
+
+
     <script src="../librerias/js/jquery-3.3.1.js"></script>
+    <script src="../librerias/js/bootstrap.min.js"></script>
     <script src="../librerias/emojionearea/dist/emojionearea.min.js"></script>
     <script src="../js/menu_modulo_usuario.js"></script>
     <script src="../js/funcioneschat.js"></script>
-
-    <!-- <script src="../js/funciones2.js"></script>
-     -->
+    <script src="../js/grupoChat.js"></script>
 </body></html>

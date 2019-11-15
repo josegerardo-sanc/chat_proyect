@@ -18,8 +18,11 @@ if(isset($_POST['acceso'])&&($_POST['acceso']=="acceso"))
         if($logueo->rowCount()>0)
         {
         $datos_=$logueo->fetch(PDO::FETCH_ASSOC);
+        
+        
+        $_SESSION['usuario']=data_user_personal($datos_['id_datos_personal'],$conexion);    
         $_SESSION['id_usuario']=$datos_['id'];
-        $_SESSION['usuario']=$datos_['usuario'];
+        $_SESSION['type_user_logueo']=$datos_['type_user'];
             
                 $insertDetails = $conexion->prepare('INSERT INTO login_details(user_id) VALUES(?)');
                 $insertDetails->bindParam(1,$_SESSION['id_usuario'],PDO::PARAM_INT);

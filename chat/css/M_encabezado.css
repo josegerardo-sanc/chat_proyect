@@ -4,29 +4,6 @@
     box-sizing: border-box;
 }
 
-body {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-footer {
-    align-self: flex-end;
-    position: fixed;
-    bottom: 0px;
-    text-align: center;
-    width: 100%;
-    height: 50px;
-    background-color: #5f6769;
-    color: #f2f6f5;
-    font-size: 12px;
-    z-index: 1000;
-
-}
-
-
-/*contenedir main*/
-
-
 .conte_scroll {
     width: auto;
     overflow: hidden;
@@ -36,26 +13,22 @@ footer {
 .conte_menu {
     display: block;
     width: calc(100% - 70px);
-    height: 34px;
     background-color: #3c4245;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 50px;
 
     position: fixed;
     top: 0px;
     right: 0px;
-    z-index: 1000;
-
-}
-
-.right {
-    margin-left: auto;
+    z-index: 901000;
 }
 
 .conte_menu a {
+    margin: 0px;
+    padding: 0px;
     display: block;
-    padding: 20px 15px;
     font-size: 15px;
     color: #f2f6f5;
 }
@@ -65,8 +38,9 @@ footer {
 }
 
 .opcion_rigth {
+    padding: 0px;
+    margin: 0px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -75,13 +49,13 @@ footer {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin: 0px 10px;
     object-fit: cover;
 }
 
 #config_footer {
     /*background-color: red;*/
-    padding: 9px;
+    padding: 10px;
 
 }
 
@@ -91,20 +65,99 @@ ul {
     list-style: none;
 }
 
+.aviso_{
+    font-size: 20px;
+    color: white;
+    position: relative;
+}
+.count_aviso{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 15px;
+    height: 15px;
+    font-size: 10px;
+    width: auto;
+    border-radius: 50%;
+    color: white;
+    background-color: red;
+    position: absolute;
+    top: -1px;
+    left: -10px;
+    
+    
+    
+}
+
 .configuraciones_perfil.conf_show {
     right: 0px;
     transition: .7s ease;
 
 }
 
+ul.configuraciones_perfil.grupo_fooot {
+    right: -15500px;
+    top:50p;
+    z-index: -400000;
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    transition: all .7s;
+}
+
+ul.configuraciones_perfil.grupo_fooot.show {
+    right:100px;
+}
+
+
+ul.configuraciones_perfil.grupo_fooot li {
+    padding: 10px 10px 15px 10px;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    color: dodgerblue;
+    font-size: 12px;
+    word-break: break-all;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    position: relative;
+}
+
+ul.configuraciones_perfil.grupo_fooot li:hover{
+    background-color:#388AA5;
+    color:#FFFFFF;
+}
+
+
+.status_msj_new {
+    font-size: 12px;
+    color: white;
+    width: 30px;
+    text-align: center;
+    background-color: #2B814E;
+}
+
+.status_grupo_new {
+    position: absolute;
+    left: 20px;
+    bottom: 0px;
+    background-color: #5191C4;
+    color: white;
+}
+
 ul.configuraciones_perfil {
     position: fixed;
-    right: -10000px;
     top: 50px;
     transition: .7s ease;
     z-index: 400000;
-    width: 200px;
     border: 1px solid #ccc;
+    right: -10000px;
+    width: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 ul.configuraciones_perfil li {
@@ -114,15 +167,15 @@ ul.configuraciones_perfil li {
     color: white;
 }
 
-ul.configuraciones_perfil li:nth-child(n+2):hover {
+ul.configuraciones_perfil.datos_ li:nth-child(n+2):hover {
     background-color: darkcyan;
 }
 
-ul.configuraciones_perfil li:nth-child(n+2):hover p {
+ul.configuraciones_perfil.datos_ li:nth-child(n+2):hover p {
     color: white;
 }
 
-ul.configuraciones_perfil li p {
+ul.configuraciones_perfil.datos_ li p {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -130,7 +183,7 @@ ul.configuraciones_perfil li p {
     margin: 10px 10px 10px 10px;
 }
 
-.configuraciones_perfil img {
+.configuraciones_perfil.datos_ img {
     display: block;
     width: 100px;
     height: 100px;
@@ -140,7 +193,7 @@ ul.configuraciones_perfil li p {
     object-fit: cover;
 }
 
-@media (min-width:425px) {
+@media (min-width:426px) {
 
     .conte_menu {
         width: calc(100% - 160px);
@@ -152,7 +205,6 @@ ul.configuraciones_perfil li p {
 
     .conte_menu {
         width: calc(100% - 250px);
-        height: 50px;
         font-size: 14px;
     }
 }

@@ -1,5 +1,7 @@
 $(function () {
 
+
+
     var screen_width = Math.round($(window).width());
 
 
@@ -18,9 +20,9 @@ $(function () {
 
     });
 
-    $('#cerrar').on('click',function(){
+    $('#cerrar').on('click', function () {
 
-        window.location="../php/eliminar.php";
+        window.location = "../php/salir.php";
     });
 
 
@@ -43,6 +45,11 @@ $(function () {
         $('.ul_menu_navegacion li a div').removeClass('activado');
 
         $('.menu_menu').toggleClass('show_menu');
+    });
+
+
+    $('#show_notificacione').on('click', function () {
+        $('#lista_new_group').toggleClass('show');
     });
 
     /*<<<<<<<<<<me perimite desplegar mi menu>>>>>>>>>>>>><*/

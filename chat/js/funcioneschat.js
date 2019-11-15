@@ -1,70 +1,5 @@
  $(function () {
 
-     var arreglo_id = [];
-
-
-     var chatBox_show_hide = function () {
-         var screen_width = $('body').width();
-         var hijos = $('.footer-chat').children('div').length;
-
-         if (screen_width > 1300) {
-             $('.footer-chat .chatBox').show();
-             for (var i = 0; i < hijos - 4; i++) {
-                 $('.footer-chat .chatBox').eq(i).hide();
-             }
-         }
-
-         if (screen_width > 1024 && screen_width < 1300) {
-             $('.footer-chat .chatBox').show();
-             for (var i = 0; i < hijos - 3; i++) {
-                 $('.footer-chat .chatBox').eq(i).hide();
-             }
-         }
-         if (screen_width > 768 && screen_width < 1024) {
-
-             $('.footer-chat .chatBox').show();
-             for (var i = 0; i < hijos - 2; i++) {
-                 $('.footer-chat .chatBox').eq(i).hide();
-             }
-         }
-         if (screen_width < 768) {
-             $('.footer-chat .chatBox').show();
-             for (var i = 0; i < hijos - 1; i++) {
-                 $('.footer-chat .chatBox').eq(i).hide();
-             }
-
-         }
-         if (screen_width <= 425) {
-             console.log("entramosssss");
-             $('.chatBox').css({
-                 height: ''
-             });
-             $('.chat_body').removeClass('ocultar');
-             $('.chat-foot').removeClass('ocultar');
-
-             $('.chat_body').css({
-                 display: ''
-             });
-             $('.chat-foot').css({
-                 display: ''
-             });
-
-             //this.parentNode.style.height = 300 + 'px';
-             //this.parentNode.children[1].style.display = 'inherit';
-             //this.parentNode.children[2].style.display = 'inherit';
-
-         }
-         if (arreglo_id.length > 0) {
-             //console.log("el arreglo esta   vacio" + arreglo_id.length);
-             $('#footer-chat').css({
-                 zIndex: '9000'
-             });
-         } else {
-             $('#footer-chat').css({
-                 zIndex: '-1'
-             });
-         }
-     }
 
      chatBox_show_hide();
 
@@ -75,35 +10,11 @@
 
      $('.input_busqueda').on('keyup', function () {
          if (this.value != "") {
-             filtro(this.value);
+             filtro(this, 'users');
          } else {
              //ocultarRows(0);
          }
      });
-
-     function filtro(cadeBusqueda) {
-         var counFilas = document.getElementById('users');
-         //alert(counFilas.children.length);
-
-         for (var newF = 0; newF < counFilas.childElementCount; newF++) {
-             var MostrarRow = false;
-             var fetchFilaNow = counFilas.children[newF];
-             //console.log(fetchFilaNow);
-             fetchFilaNow.style.display = 'none';
-
-             var nombre = fetchFilaNow.dataset.nombre;
-             if (nombre.toLocaleLowerCase().trim().indexOf(cadeBusqueda.toLocaleLowerCase().trim()) > -1) {
-                 MostrarRow = true;
-             }
-             if (MostrarRow) {
-                 fetchFilaNow.style.display = null;
-             }
-         }
-
-     }
-
-
-
 
 
      $('.input_busqueda').on('keyup', function () {
@@ -128,32 +39,29 @@
 
      function load_user() {
          $.post('../php/usuarios.php', function (data) {
-             $('.users').html(data);
+             //console.log(data);
+             var json = JSON.parse(data);
+             $('.users').html(json['data'].html);
+             $('#disponibles_chat').html('Conectados ' + json['data'].conectados);
          });
      }
 
 
-
-   
-
-
-
      function chatBox(id, nombre, n_mensajes, status, fecha, is_type) {
 
-         var chat = '<div class="chatBox" data-id="' + id + '"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="status' + id + '" class="status_user ' + status + ' fas fa-circle" style="margin: 0px 10px;"></span><span id="n_mensaje' + id + '" class="">' + n_mensajes + '</span><a href="#" class="cerrar_chat">X</a><a href="#" id="is_type' + id + '" class="chat_is_type">' + is_type + '</a></div><div class="chat_body" id="chat_body' + id + '">' + Historial_msj(id, "1") + '</div><small class="ultima_conexion_chat" id="fecha_ultima' + id + '"></small><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea' + id + '" class="message_send"></textarea><button type="button" class="btn_foot_chat sendMessage"><i class="fas fa-paper-plane"></i></button></div></div>';
+         var chat = '<div class="chatBox Singular " data-id="' + id + '" data-tipo_conversacion="singular"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="status' + id + '" class="status_user ' + status + ' fas fa-circle" style="margin: 0px 10px;"></span><span id="n_mensaje' + id + '" class="">' + n_mensajes + '</span><a href="#" class="cerrar_chat">X</a><a href="#" id="is_type' + id + '" class="chat_is_type">' + is_type + '</a></div><div class="chat_body" id="chat_body' + id + '">' + Historial_msj(id, "1") + '</div><small class="ultima_conexion_chat" id="fecha_ultima' + id + '"></small><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea' + id + '" class="message_send"></textarea><button type="button" class="btn_foot_chat sendMessage"><i class="fas fa-paper-plane"></i></button></div></div>';
          $('.footer-chat').append(chat);
      }
 
      function act_historial_msj() {
 
-         $('.chatBox').each(function () {
+         $('.Singular').each(function () {
+             console.log("each de each");
              var id = $(this).data('id');
              Historial_msj(id, "2");
          });
          //console.log("actualizando historial de mensajes");
      }
-
-
 
      function Historial_msj(id, tipo) {
          $.post('../php/historial.php', {
@@ -161,7 +69,6 @@
              tipo_consult: tipo
          }, function (data) {
              // === undefined
-             //console.log(data);
              var json = JSON.parse(data);
              $('#chat_body' + id).html(json['data'].historial);
              $('#chat_body' + id).scrollTop($('#chat_body' + id).prop('scrollHeight'));
@@ -196,9 +103,10 @@
          });
      }
 
-
      //console.log(arreglo_id);
      $(document).on('click', '.item-user', function () {
+
+
          var id = $(this).data('id');
          var nombre = $(this).data('nombre');
          var fecha = $(this).data('fecha');
@@ -207,16 +115,10 @@
          //var n_mensajes = $(this).data('n_mensaje');
          var n_mensajes = '';
          var escribiendo = '';
+         var agregar_chat = agregar_arreglo(id, 'singular');
 
-         var agregar = true;
-         for (var i = 0; i < arreglo_id.length; i++) {
-             if (arreglo_id[i] == id) {
-                 agregar = false;
-                 break;
-             }
-         }
-         if (agregar) {
-             arreglo_id.push(id);
+         if (agregar_chat) {
+
              chatBox(id, nombre, n_mensajes, status, fecha, escribiendo);
              $('#textarea' + id).emojioneArea({
                  pickerPosition: "top",
@@ -234,54 +136,6 @@
              //console.log(data);
          });
      }
-     $(document).on('click', '.cerrar_chat', function (e) {
-         e.stopPropagation();
-         var element = $(this).parents('.chatBox');
-         var id = element.data('id');
-         element.remove();
-         var index = arreglo_id.indexOf(id);
-         if (index != '-1') {
-             arreglo_id.splice(index, 1);
-         }
-         console.log(arreglo_id);
-         chatBox_show_hide();
-     });
-
-
-
-     $(document).on('click', '.chat_header', function () {
-         var screen_width = $('body').width();
-         var heigth = 350;
-         if (!(screen_width >= 425)) {
-             return false;
-         }
-         if (screen_width >= 768) {
-             heigth = 400;
-
-         }
-         if ($(this).hasClass('ocultar')) {
-             $(this).css({
-                 backgroundColor: "white"
-             });
-             $(this).removeClass('ocultar');
-             this.parentNode.style.height = heigth + 'px';
-             this.parentNode.children[1].style.display = 'inherit';
-             this.parentNode.children[2].style.display = 'inherit';
-
-
-
-         } else {
-
-             $(this).addClass('ocultar');
-             $(this).css({
-                 backgroundColor: "#F0F3F4"
-             });
-             this.parentNode.style.height = 'auto';
-             this.parentNode.children[1].style.display = 'none';
-             this.parentNode.children[2].style.display = 'none';
-         }
-
-     });
 
 
      $(document).on('click', '.sendMessage', function () {
@@ -295,17 +149,15 @@
          }
          $.post('../php/insertarMensaje.php', {
              id: id,
-             data_msj: mensaje
+             data_msj: mensaje,
+             type_conversacion: '0'
          }, function (data) {
-
              $('#chat_body' + id).html(data);
              var element = $('#textarea' + id).emojioneArea();
              element[0].emojioneArea.setText('');
              $('#chat_body' + id).scrollTop($('#chat_body' + id).prop('scrollHeight'));
          });
      });
-
-
 
      $(document).on('focus', '.message_send', function () {
          var id = $(this).parents('.chatBox').data('id');
@@ -314,7 +166,7 @@
              id: id,
              type: is_type
          }, function (data) {
-             console.log(data);
+             //console.log(data);
          });
      });
 
@@ -325,56 +177,167 @@
              id: id,
              type: is_type
          }, function (data) {
-             console.log(data);
+             //console.log(data);
          });
      });
 
 
-     /*------------------------------------*/
+ });
 
-     /*$('#group_chat').click(function () {
-         //$('#group_chat_dialog').dialog('open');
-         $('#is_active_group_chat_window').val('yes');
-         fetch_group_chat_history();
-     });
 
-     $('#send_group_chat').click(function () {
-         var chat_message = $.trim($('#group_chat_message').html());
-         var action = 'insert_data';
-         if (chat_message != '') {
-             $.ajax({
-                 url: "../php/group_chat.php",
-                 method: "POST",
-                 data: {
-                     chat_message: chat_message,
-                     action: action
-                 },
-                 success: function (data) {
-                     $('#group_chat_message').html('');
-                     $('#group_chat_history').html(data);
-                 }
-             })
-         } else {
-             alert('Type something');
-         }
-     });
+ var chatBox_show_hide = function () {
+     var screen_width = $('body').width();
+     var hijos = $('.footer-chat').children('div').length;
 
-     function fetch_group_chat_history() {
-         var group_chat_dialog_active = $('#is_active_group_chat_window').val();
-         var action = "fetch_data";
-         if (group_chat_dialog_active == 'yes') {
-             $.ajax({
-                 url: "../php/group_chat.php",
-                 method: "POST",
-                 data: {
-                     action: action
-                 },
-                 success: function (data) {
-                     console.log(data);
-                     $('#group_chat_history').html(data);
-                 }
-             })
-         }
-     }*/
+     var n_aOcultar = 0;
+     //console.log(hijos)
+
+     if (screen_width >= 426) {
+         n_aOcultar = 1;
+     }
+     if (screen_width >= 830) {
+         n_aOcultar = 2;
+     }
+     if (screen_width >= 1026) {
+         n_aOcultar = 3;
+     }
+
+     $('.footer-chat .chatBox').show();
+     for (var i = 0; i < hijos - n_aOcultar; i++) {
+         $('.footer-chat .chatBox').eq(i).hide();
+     }
+
+
+     if (screen_width < 426) {
+
+         $('.chatBox').css({
+             display: ''
+         });
+         $('.chatBox').css({
+             height: ''
+         });
+         $('.chat_body').removeClass('ocultar');
+         $('.chat-foot').removeClass('ocultar');
+
+         $('.chat_body').css({
+             display: ''
+         });
+         $('.chat-foot').css({
+             display: ''
+         });
+
+         //this.parentNode.style.height = 300 + 'px';
+         //this.parentNode.children[1].style.display = 'inherit';
+         //this.parentNode.children[2].style.display = 'inherit';
+     }
+     if (arreglo_id.length > 0) {
+         //console.log("el arreglo no esta   vacio" + arreglo_id.length);
+         $('#footer-chat').css({
+             zIndex: '9000'
+         });
+     } else {
+         $('#footer-chat').css({
+             zIndex: '-1'
+         });
+     }
+ }
+
+
+ $(document).on('click', '.chat_header', function () {
+     //$('.chat_header').on('click', function () {
+     //console.log("header-chat");
+     var screen_width = $('body').width();
+     var heigth = 350;
+     if (!(screen_width >= 425)) {
+         return false;
+     }
+
+     if ($(this).hasClass('ocultar')) {
+         $(this).css({
+             backgroundColor: "white"
+         });
+         $(this).removeClass('ocultar');
+         this.parentNode.style.height = '400px';
+         this.parentNode.children[1].style.display = 'inherit';
+         this.parentNode.children[2].style.display = 'inherit';
+
+
+
+     } else {
+         console.log("1ro aqui");
+         $(this).addClass('ocultar');
+         $(this).css({
+             backgroundColor: "#F0F3F4"
+         });
+         this.parentNode.style.height = '50px';
+         this.parentNode.children[1].style.display = 'none';
+         this.parentNode.children[2].style.display = 'none';
+     }
 
  });
+
+ $(document).on('click', '.cerrar_chat', function (e) {
+     e.stopPropagation();
+     console.log("eliminar");
+     var element = $(this).parents('.chatBox');
+     var id = element.data('id');
+     var tipo = element.data('tipo_conversacion');
+     element.remove();
+     var id_tipo = id + tipo;
+     var index = arreglo_id.indexOf(id_tipo);
+     if (index != '-1') {
+         arreglo_id.splice(index, 1);
+     }
+     //console.log(arreglo_id);
+     chatBox_show_hide();
+ });
+
+ var arreglo_id = [];
+
+ var agregar_arreglo = function (id, tipo) {
+     var agregar = true;
+     var id_tipo = id + tipo;
+     for (var i = 0; i < arreglo_id.length; i++) {
+         if (arreglo_id[i] == id_tipo) {
+             agregar = false;
+             break;
+         }
+     }
+     if (agregar) {
+         id = id + tipo;
+         arreglo_id.push(id);
+         //console.log("agregado" + id);
+     }
+     return agregar;
+ }
+
+
+ var filtro = function (input, padre) {
+     input.style.border = '1px solid white';
+     var cadeBusqueda = input.value;
+     var counFilas = document.getElementById(padre);
+     //alert(counFilas.children.length);
+
+     var contador = 0;
+     for (var newF = 0; newF < counFilas.childElementCount; newF++) {
+         var MostrarRow = false;
+         var fetchFilaNow = counFilas.children[newF];
+         //console.log(fetchFilaNow);
+         fetchFilaNow.style.display = 'none';
+
+         var nombre = fetchFilaNow.dataset.nombre;
+         if (nombre.toLocaleLowerCase().trim().indexOf(cadeBusqueda.toLocaleLowerCase().trim()) > -1) {
+             MostrarRow = true;
+         }
+         if (MostrarRow) {
+             fetchFilaNow.style.display = null;
+             input.style.border = '1px solid #63B4CB';
+             //console.log(nombre);
+             contador++;
+         }
+     }
+     if (contador <= 0) {
+         input.style.border = '1px solid red';
+     }
+
+ }
