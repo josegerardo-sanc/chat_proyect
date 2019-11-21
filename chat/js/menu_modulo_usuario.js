@@ -11,17 +11,17 @@ $(function () {
     /*<<<<<<<<<<este me permite mstrar mi conte opciones perfil>>>>>>>*/
     $('#config_footer').on('click', function (e) {
         e.preventDefault();
-        if ($('.configuraciones_perfil').hasClass('conf_show')) {
-            $('.configuraciones_perfil').removeClass('conf_show');
+        if ($('.perfil').hasClass('conf_show')) {
+            $('.perfil').removeClass('conf_show');
         } else {
-            $('.configuraciones_perfil').addClass('conf_show');
+            $('.perfil').addClass('conf_show');
 
         }
 
     });
 
-    $('#cerrar').on('click', function () {
-
+    $('#cerrar_session').on('click', function (e) {
+        e.preventDefault();
         window.location = "../php/salir.php";
     });
 
@@ -47,10 +47,32 @@ $(function () {
         $('.menu_menu').toggleClass('show_menu');
     });
 
-
-    $('#show_notificacione').on('click', function () {
-        $('#lista_new_group').toggleClass('show');
-    });
+    $(".show_notificacione").hover(
+        function (e) {
+            e.stopPropagation();
+            $('ul.grupo_lista').css({
+                display: 'block'
+            });
+        },
+        function () {
+            $('ul.grupo_lista').css({
+                display: 'none'
+            });
+        }
+    );
+    $("#responder_anonimo").hover(
+        function (e) {
+            e.stopPropagation();
+            $('ul.anonimo_lista').css({
+                display: 'block'
+            });
+        },
+        function () {
+            $('ul.anonimo_lista').css({
+                display: 'none'
+            });
+        }
+    );
 
     /*<<<<<<<<<<me perimite desplegar mi menu>>>>>>>>>>>>><*/
 
@@ -75,7 +97,7 @@ $(function () {
     $(window).resize(function () {
         screen_width = $(window).width();
         /*<<<<<esconde mi conte perfil>>>>>*/
-        $('.configuraciones_perfil').removeClass('conf_show');
+        $('.perfil').removeClass('conf_show');
         /*<<<<<esconde mi conte menu>>>*/
         $('.ul_menu_navegacion').removeClass('show_menu');
 

@@ -1,5 +1,7 @@
 $(function () {
 
+
+
     load_grupo_grupo_chat(); //carga la lista de grupos
     setInterval(function () {
         load_grupo_grupo_chat();
@@ -15,9 +17,9 @@ $(function () {
             $('#new_grupos').html(json['data'].contador);
             $('#count_aviso').removeClass('count_aviso');
             $('#count_aviso').html('');
-            if(json['data'].aviso_msj>0){
-            $('#count_aviso').addClass('count_aviso')    
-            $('#count_aviso').html(json['data'].aviso_msj);
+            if (json['data'].aviso_msj > 0) {
+                $('#count_aviso').addClass('count_aviso')
+                $('#count_aviso').html(json['data'].aviso_msj);
             }
         });
 
@@ -31,6 +33,9 @@ $(function () {
         });
         //console.log("actualizando historial de mensajes");
     }
+
+    var n_mensaje = 0;
+    var audio = document.getElementById("miAudio");
 
     function Historial_grupo(id, tipo) {
         $.post('../php/load_chatGrupo.php', {
@@ -47,6 +52,25 @@ $(function () {
                 var class_n_msj = '';
                 if (json['data'].contador > 0) {
                     $('#n_mensaje_grupo' + id).addClass('new_chat_msj');
+                    //para que no vuelva asonar
+                    var id_tipo = id + 'grupo';
+                    var indice = 0;
+                    var encontrado = false;
+                    for (var i = 0; i < arreglo_id.length; i++) {
+                        if (arreglo_id[i][0] == id_tipo) {
+                            indice = i;
+                            encontrado = true;
+                        }
+                    }
+                    if (encontrado) {
+                        if (json['data'].contador > arreglo_id[indice][1]) {
+                            audio.currentTime = 0;
+                            audio.play();
+                            arreglo_id[indice][1] = json['data'].contador;
+                        }
+                    }
+                    console.log(arreglo_id);
+
                 }
                 $('#n_mensaje_grupo' + id).html(json['data'].contador);
             }
@@ -54,7 +78,7 @@ $(function () {
     }
 
 
-    $(document).on('click', '.item_grupo_event', function () {
+    $(document).on('click', '.item_grupo_', function () {
         var id = $(this).data('id');
         var nombre = $(this).data('nombre');
         var agregar_chat = agregar_arreglo(id, 'grupo');
@@ -63,9 +87,9 @@ $(function () {
             var n_mensajes = '';
             chatBox(id, nombre, n_mensajes);
             $('#textarea_grupo' + id).emojioneArea({
-                 pickerPosition: "top",
-                 toneStyle: "bullet"
-             });
+                pickerPosition: "top",
+                toneStyle: "bullet"
+            });
 
         } else {
             //console.log("este user ya existe en el chat");
@@ -75,7 +99,7 @@ $(function () {
 
     function chatBox(id, nombre, n_mensajes) {
 
-        var chat = '<div class="chatBox grupo" data-tipo_conversacion="grupo" data-id="' + id + '"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="n_mensaje_grupo' + id + '" class=""></span><a href="#" class="cerrar_chat">X</a></div><div class="chat_body" id="chat_body_grupo' + id + '">' + Historial_grupo(id, "1") + '</div><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea_grupo' + id + '" class="message_send_grupo"></textarea><button type="button" class="btn_foot_chat sendMessage_grupo"><i class="fas fa-paper-plane"></i></button></div></div>';
+        var chat = '<div class="chatBox grupo" data-tipo_conversacion="grupo" data-id="' + id + '"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="n_mensaje_grupo' + id + '" class=""></span><a href="#" class="cerrar_chat">X</a></div><div class="chat_body" id="chat_body_grupo' + id + '">' + Historial_grupo(id, "1") + '</div><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea_grupo' + id + '" class="message_send_grupo"></textarea><button type="button" class="btn_foot_chat btn_send sendMessage_grupo"><i class="fas fa-paper-plane"></i></button></div></div>';
         $('.footer-chat').append(chat);
     }
 
@@ -86,6 +110,12 @@ $(function () {
             action: 'actualizar_Mensajes'
         }, function (data) {
             console.log(data);
+            var tipo = id + 'grupo';
+            var idx = arreglo_id[0].indexOf(tipo);
+            if (idx != -1) {
+                arreglo_id[idx][1] = 0;
+                console.log(arreglo_id);
+            }
         });
     });
 

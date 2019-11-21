@@ -41,7 +41,7 @@
          $.post('../php/usuarios.php', function (data) {
              //console.log(data);
              var json = JSON.parse(data);
-             $('.users').html(json['data'].html);
+             $('#users').html(json['data'].html);
              $('#disponibles_chat').html('Conectados ' + json['data'].conectados);
          });
      }
@@ -49,24 +49,26 @@
 
      function chatBox(id, nombre, n_mensajes, status, fecha, is_type) {
 
-         var chat = '<div class="chatBox Singular " data-id="' + id + '" data-tipo_conversacion="singular"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="status' + id + '" class="status_user ' + status + ' fas fa-circle" style="margin: 0px 10px;"></span><span id="n_mensaje' + id + '" class="">' + n_mensajes + '</span><a href="#" class="cerrar_chat">X</a><a href="#" id="is_type' + id + '" class="chat_is_type">' + is_type + '</a></div><div class="chat_body" id="chat_body' + id + '">' + Historial_msj(id, "1") + '</div><small class="ultima_conexion_chat" id="fecha_ultima' + id + '"></small><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea' + id + '" class="message_send"></textarea><button type="button" class="btn_foot_chat sendMessage"><i class="fas fa-paper-plane"></i></button></div></div>';
+         var chat = '<div class="chatBox Singular " data-id="' + id + '" data-tipo_conversacion="singular"><div class="chat_header"><a href="#" class="chat_name">' + nombre + '</a><span id="status' + id + '" class="status_user ' + status + ' fas fa-circle" style="margin: 0px 10px;"></span><span id="n_mensaje' + id + '" class="">' + n_mensajes + '</span><a href="#" class="cerrar_chat">X</a><a href="#" id="is_type' + id + '" class="chat_is_type">' + is_type + '</a></div><div class="chat_body" id="chat_body' + id + '">' + Historial_msj(id, "1", "0") + '</div><small class="ultima_conexion_chat" id="fecha_ultima' + id + '"></small><div class="chat-foot ocultar_mensaje"><button class="btn_foot_chat btn_file_upload"><i class="fas fa-file-upload"></i></button><textarea id="textarea' + id + '" class="message_send"></textarea><button type="button" class="btn_foot_chat btn_send sendMessage"><i class="fas fa-paper-plane"></i></button></div></div>';
          $('.footer-chat').append(chat);
      }
 
      function act_historial_msj() {
 
          $('.Singular').each(function () {
-             console.log("each de each");
+             //console.log("sngular de singular");
              var id = $(this).data('id');
-             Historial_msj(id, "2");
+             Historial_msj(id, "2", "0");
          });
          //console.log("actualizando historial de mensajes");
      }
+     var audio = document.getElementById("miAudio");
 
-     function Historial_msj(id, tipo) {
+     function Historial_msj(id, tipo, singular) {
          $.post('../php/historial.php', {
              usuario: id,
-             tipo_consult: tipo
+             tipo_consult: tipo,
+             tipo_conversacion: singular
          }, function (data) {
              // === undefined
              var json = JSON.parse(data);
@@ -81,6 +83,27 @@
                  var class_n_msj = '';
                  if (json['data'].contador > 0) {
                      $('#n_mensaje' + id).addClass('new_chat_msj');
+                     //para que no vuelva asonar
+                     var id_tipo = id + 'singular';
+                     var indice = 0;
+                     var encontrado = false;
+                     for (var i = 0; i < arreglo_id.length; i++) {
+                         if (arreglo_id[i][0] === id_tipo) {
+                             indice = i;
+                             encontrado = true;
+                             //console.log(arrayChatbox_sound);
+                         }
+                     }
+                     if (encontrado) {
+                         if (json['data'].contador > arreglo_id[indice][1]) {
+                             audio.currentTime = 0;
+                             audio.play();
+                             arreglo_id[indice][1] = json['data'].contador;
+                         }
+                     }
+                     // console.log(arreglo_id);
+
+
                  }
                  $('#n_mensaje' + id).html(json['data'].contador);
              }
@@ -115,6 +138,8 @@
          //var n_mensajes = $(this).data('n_mensaje');
          var n_mensajes = '';
          var escribiendo = '';
+
+
          var agregar_chat = agregar_arreglo(id, 'singular');
 
          if (agregar_chat) {
@@ -159,31 +184,33 @@
          });
      });
 
+
      $(document).on('focus', '.message_send', function () {
          var id = $(this).parents('.chatBox').data('id');
-         var is_type = 'yes';
-         $.post("../php/insert_writing.php", {
-             id: id,
-             type: is_type
-         }, function (data) {
-             //console.log(data);
-         });
+         focus_('yes', id, 'singular', '0', '../php/insert_writing.php');
      });
+
 
      $(document).on('blur', '.message_send', function () {
          var id = $(this).parents('.chatBox').data('id');
-         var is_type = 'no';
-         $.post("../php/insert_writing.php", {
-             id: id,
-             type: is_type
-         }, function (data) {
-             //console.log(data);
-         });
+         focus_('no', id, 'singular', '0', '../php/insert_writing.php');
      });
 
 
+     
+     
  });
 
+
+  var remove_=function() {
+    $.post('../php/insert_writing.php', {
+        eliminar: 'eliminar'
+    }, function (data) {
+        console.log(data);
+    });
+
+}
+remove_();
 
  var chatBox_show_hide = function () {
      var screen_width = $('body').width();
@@ -242,6 +269,20 @@
      }
  }
 
+ var focus_ = function (is_type, id, tipo_chatbox, type_conversacion, ruta) {
+     $.post(ruta, {
+         id: id,
+         type: is_type,
+         type_conversacion: type_conversacion
+
+     }, function (data) {
+         console.log(data);
+         var idx = arreglo_id[0].indexOf(id + tipo_chatbox);
+         if (idx != -1) {
+             arreglo_id[idx][1] = 0;
+         }
+     });
+ }
 
  $(document).on('click', '.chat_header', function () {
      //$('.chat_header').on('click', function () {
@@ -284,30 +325,37 @@
      var tipo = element.data('tipo_conversacion');
      element.remove();
      var id_tipo = id + tipo;
-     var index = arreglo_id.indexOf(id_tipo);
-     if (index != '-1') {
-         arreglo_id.splice(index, 1);
+     for (var i = 0; i < arreglo_id.length; i++) {
+         if (arreglo_id[i][0] == id_tipo) {
+             arreglo_id.splice(i, 1);
+             contador--;
+             break;
+         }
      }
+     console.log(arreglo_id);
      //console.log(arreglo_id);
      chatBox_show_hide();
  });
 
  var arreglo_id = [];
-
+ var contador = 0;
  var agregar_arreglo = function (id, tipo) {
      var agregar = true;
      var id_tipo = id + tipo;
      for (var i = 0; i < arreglo_id.length; i++) {
-         if (arreglo_id[i] == id_tipo) {
+         if (arreglo_id[i][0] == id_tipo) {
              agregar = false;
              break;
          }
      }
      if (agregar) {
-         id = id + tipo;
-         arreglo_id.push(id);
+         arreglo_id[contador] = new Array(2);
+         arreglo_id[contador][0] = id_tipo;
+         arreglo_id[contador][1] = 0;
+         contador++;
          //console.log("agregado" + id);
      }
+     console.log(arreglo_id);
      return agregar;
  }
 

@@ -27,11 +27,73 @@
     <?php
         include('header.php');
     /*si el usuario presiona f5 se reinicia mi variable grupo para que vuelva afuncionar la opcio agregar y NoAgregar*/
-         unset($_SESSION['grupo']);
+         unset($_SESSION['grupo']);//esta variable pertenece alos particpantes de un grupo
+         unset($_SESSION['id_anonimo']);//esta variable pertenece a chatAnonimo
     ?>
-
-
-    <nav class="conte_users">
+    <!-- <div class="conte_menu" id="header_conte_header">
+        <div class="opcion_rigth">
+            <a href="#" class="item_a" id="ocultar_anonimo">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#" class="item_a" id="responder_anonimo">
+                <i class="fas fa-phone-volume">
+                </i>
+                <small id="" class="anonimo_call"></small>
+                <ul class="anonimo_lista" id="lista_new_anonimos">
+                    <li class="item_grupo_event" datanombre="'.ucwords($nombre_grupo).'" data-id="'.$grupo['id_grupo'].'">
+                        <small class="conexion_">
+                            <i class="fas fa-circle"></i>
+                        </small>
+                        <small class="new_mensaje_">21</small>
+                        <small class="status_grupo">Atender</small>
+                    </li>
+                </ul>
+    
+            </a>
+        </div>
+        <div class="opcion_rigth right">
+            <div class="opcion_rigth show_notificacione">
+                <a href="#" class="item_a">
+                    <i class="fas fa-envelope"></i>
+                    <small id="count_aviso" class="anonimo_call"></small>
+                </a>
+                <a href="#" class="item_a ">
+                    <i class="fas fa-bell"></i>
+                    <small class="anonimo_call" id="new_grupos"></small>
+                </a>
+                <ul class="grupo_lista" id="lista_new_group">
+                    <li class="item_grupo_event" datanombre="'.ucwords($nombre_grupo).'" data-id="'.$grupo['id_grupo'].'">
+                    '.ucworddldddss($nombre_grupo).'
+                    <small class="new_mensaje"></small>
+                    <small class="status_grupo">Nuevo Grupo</small>
+                </li>
+                </ul>
+            </div>
+    
+    
+            <img src="../imagenes/img4.png" alt="" class="img_perfil">
+            <a href="#" id="config_footer" class="item_a">
+                <i class="fas fa-cogs"></i>
+            </a>
+        </div>
+        <ul class="perfil">
+            <li>
+                <img class="img_perfil_config" src="../imagenes/img4.png" alt="">
+            </li>
+            <li>
+                <?php echo $_SESSION['usuario'];?> <i class="fas fa-user"></i>
+            </li>
+            <li>
+                Editar cuenta <i class="fas fa-edit"></i>
+            </li>
+            <li id="cerrar_session">
+                Cerrar Sesión <i class="fas fa-toggle-off"></i>
+            </li>
+        </ul>
+    </div>
+    
+     -->
+    <nav class="conte_users" id="conte_usuarios">
         <div class="info_users">
             <h1 class="lead">Usuarios </h1>
             <span class="small text-info" id="disponibles_chat">Conectado 0</span>
@@ -67,13 +129,38 @@
                     <i class="fas fa-circle"></i>
                 </span>
             </li> -->
-
         </ul>
         <div class="" id="buscar">
             <span class="icon_"><i class="fas fa-search"></i></span>
             <input type="search" class="input_busqueda">
         </div>
     </nav>
+
+    <nav class="conte_anonimos show" id="anonimos_conte">
+        <div class="info_users">
+            <h1 class="lead">Clientes </h1>
+            <span class="small text-info" id="disponibles_chat">Atendiendo 0</span>
+
+        </div>
+        <ul class="users" id="anonimos">
+            <!--<li class="item-user" data-id="'.$usuario['id'] .'">
+
+                <a href="#" class="user">
+                    <span class="is_type">
+                        <i class="far fa-comment-dots"></i>Escribiendo...
+                    </span>
+                    Maria del carmen zamudio herrera
+                    <span class="n_mensaje">9</span>
+
+                </a>
+                <span class="status_user Activo">
+                    <i class="fas fa-circle"></i>
+                </span>
+            </li>-->
+        </ul>
+    </nav>
+
+
     <div class="cont_main">
         <div class="container">
             <div class="row d-flex justify-content-end">
@@ -149,6 +236,13 @@
 
 
     <div class="footer-chat" id="footer-chat">
+        <audio controls src="../librerias/mensaje_ting.mp3" id="miAudio" style=" display:none;">
+            Your browser does not support the audio element.
+        </audio>
+        <audio controls src="../librerias/apple_tono_ring.mp3" id="call_call" style=" display:none;">
+            Your browser does not support the audio element.
+        </audio>
+
 
         <!--         <div class="chatBox" data-id="'+ start_chat_Clave + '">
             <div class="chat_header">
@@ -182,4 +276,7 @@
     <script src="../js/menu_modulo_usuario.js"></script>
     <script src="../js/funcioneschat.js"></script>
     <script src="../js/grupoChat.js"></script>
-</body></html>
+    <script src="../js/anonimo.js"></script>
+</body>
+
+</html>

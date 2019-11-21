@@ -18,13 +18,13 @@ if(isset($_SESSION['id_usuario']))
         $fecha = date('Y-m-d H:i:s', $fecha);
         $n_mensajes=0;
         $clase_n_mensaje='';
-        $is_type='';
-        $is_type=is_type($usuario['id'],$_SESSION['id_usuario'],$conexion);    
-        $status_usuario=status_conexion($usuario['id'],$conexion);    
+            $is_type='';
+            $is_type=is_type($usuario['id'],$_SESSION['id_usuario'],$conexion,0);    
+            $status_usuario=status_conexion($usuario['id'],0,$conexion);    
         
             
         $nombre_completo_=data_user_personal($usuario['id_datos_personal'],$conexion);  
-        $n_mensajes=Mensaje_Contador_NoVisto($usuario['id'],$_SESSION['id_usuario'],$conexion);
+        $n_mensajes=Mensaje_Contador_NoVisto($usuario['id'],$_SESSION['id_usuario'],$conexion,0);
             if($n_mensajes>0){
                 $clase_n_mensaje='n_mensaje';
             }
@@ -35,7 +35,7 @@ if(isset($_SESSION['id_usuario']))
             }else{
                 $status='NoActivo';
                 $ultima_conexion=$status_usuario;
-                is_type_update($usuario['id'],$conexion);//si se desconecto entonce ya no esta escribiendo..
+                is_type_update($usuario['id'],$conexion,0);//si se desconecto entonce ya no esta escribiendo..
             }
             
             if($is_type=="yes" && $status=="Activo"){
@@ -64,7 +64,12 @@ if(isset($_SESSION['id_usuario']))
         echo json_encode(array("data"=>$arreglo));
     }
     else{
-        echo $filas;
+        if($filas==''){
+            $html='<li class="item-user">
+                        No se encontaron resultados
+                    </li>';
+                    echo $html;
+        }
         
     }
     

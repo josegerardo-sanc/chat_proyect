@@ -8,11 +8,10 @@ include('conexion.php');
 if($_POST['action']=="load_grupo"){
          $consult=$conexion->prepare("select * from participantes where id_user=? and status!='2'");
          $consult->bindParam(1,$_SESSION['id_usuario'],PDO::PARAM_INT);
-         $consult->execute();
-       
+         $consult->execute();        
          $html_new_grupo='';
-         $new_grupo_count=0;
-         $aviso_de_nuevo_mensaje=0;
+         $new_grupo_count='';
+         $aviso_de_nuevo_mensaje='';
          while($grupo=$consult->fetch(PDO::FETCH_ASSOC)){
                   $consult_grupo=$conexion->prepare("select * from newgrupo where id_grupo=?");
                   $consult_grupo->bindParam(1,$grupo['id_grupo'],PDO::PARAM_INT);
@@ -37,12 +36,23 @@ if($_POST['action']=="load_grupo"){
                  if($grupo['status']=='0'){
                    $status='nuevo grupo';      
                    $new_grupo_count++;
-                  }  
+                  }
+              $clase='';
+                if($new_num_mensaje>0){
+                    $clase='new_mensaje_';
+                }
+              $html_new_grupo.='<li class="item_grupo_event item_grupo_" data-nombre="'.ucwords($nombre_grupo).'" data-id="'.$grupo['id_grupo'].'">
+                        '.ucwords($nombre_grupo).'
+                        <small class="'.$clase.'">'.$new_num_mensaje.'</small>
+                        <small class="status_grupo">'.$status.'</small>
+                    </li>';
              
-                  $html_new_grupo.='<li class="item_grupo_event" data-nombre="'.ucwords($nombre_grupo).'" data-id="'.$grupo['id_grupo'].'">'.ucwords($nombre_grupo).'
-                  <small class="status_msj_new">'.$new_num_mensaje.'</small>
-                  <small class="status_grupo_new">'.$status.'</small> </li> ';
+                 
+             
          }
+        if($html_new_grupo==""){
+            $html_new_grupo='<span style="padding: 10px;color: dodgerblue;">No se Enonctraron resultados</span>';
+        }
     $arreglo=["html"=>$html_new_grupo,"contador"=>$new_grupo_count,"aviso_msj"=>$aviso_de_nuevo_mensaje];   
     echo json_encode(array("data"=>$arreglo));
 }
